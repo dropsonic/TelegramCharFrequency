@@ -31,6 +31,7 @@ const authoredTextEntitiesOnly = (textEntity) =>
 
 const countChars = ({ type, text }) => {
   const map = {};
+  text = text?.normalize('NFC');
 
   for (let char of text) {
     if (char === '\n') {
