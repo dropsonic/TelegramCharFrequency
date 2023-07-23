@@ -1,0 +1,14 @@
+{
+  "name": "telegramcharfrequency",
+  "version": "1.0.0",
+  "description": "A console tool to count characters frequency in Telegram chat history exported as JSON",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "telegram"
+  ],
+  "author": "Vladimir Panchenko",
+  "license": "MIT"
+}
