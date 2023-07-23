@@ -29,36 +29,50 @@ const authoredTextEntitiesOnly = (textEntity) =>
     ? textEntity
     : null;
 
-const countChars = ({ type, text }) => {
-  const map = {};
-  text = text?.normalize('NFC');
+const countChars =
+  (categories) =>
+  ({ type, text }) => {
+    const map = {};
+    text = text?.normalize('NFC');
 
-  for (let char of text) {
-    if (char === '\n') {
-      char = '<new line>';
-    } else if (char === ' ') {
-      char = '<space>';
-    } else if (char === ' ') {
-      char = '<nbsp>';
+    let regexp;
+
+    if (categories && categories.length > 0) {
+      const pattern = `[^${categories
+        .map((c) => `\\p{General_Category=${c}}`)
+        .join('')}]`;
+      regexp = new RegExp(pattern, 'gu');
+      text = text.replace(regexp, '');
     }
 
-    if (!map[char]) {
-      map[char] = 0;
+    if (['code', 'pre'].includes(type) && (!regexp || !'`'.match(regexp))) {
+      if (!map['`']) map['`'] = 0;
+
+      if (type === 'code') {
+        map['`'] += 1 * 2;
+      } else if (type === 'pre') {
+        map['`'] += 3 * 2;
+      }
     }
 
-    map[char] += 1;
-  }
+    for (let char of text) {
+      if (char === '\n') {
+        char = '<new line>';
+      } else if (char === ' ') {
+        char = '<space>';
+      } else if (char === ' ') {
+        char = '<nbsp>';
+      }
 
-  if (type === 'code') {
-    if (!map['`']) map['`'] = 0;
-    map['`'] += 1 * 2;
-  } else if (type === 'pre') {
-    if (!map['`']) map['`'] = 0;
-    map['`'] += 3 * 2;
-  }
+      if (!map[char]) {
+        map[char] = 0;
+      }
 
-  return map;
-};
+      map[char] += 1;
+    }
+
+    return map;
+  };
 
 const createReducer = (map = {}, options = {}) =>
   new Transform({

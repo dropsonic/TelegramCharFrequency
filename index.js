@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { program } = require('commander');
+const { program, Option } = require('commander');
 const pkg = require('./package.json');
 const { chain } = require('stream-chain');
 const { parser } = require('stream-json');
@@ -29,7 +29,21 @@ program
     'Telegram User ID (you can use userinfobot to get it)'
   )
   .option('--skip-emojis', 'Skips emojis when counting frequencies')
-  .action((filename, { user, skipEmojis }) => {
+  .addOption(
+    new Option(
+      '-c, --categories [categories...]',
+      'Specific character categories to count (see https://unicode.org/reports/tr18/#General_Category_Property for more details)'
+    ).choices([
+      'Letter',
+      'Mark',
+      'Number',
+      'Symbol',
+      'Punctuation',
+      'Separator',
+      'Other',
+    ])
+  )
+  .action((filename, { user, skipEmojis, categories }) => {
     user = user?.trim();
     const reduce = createReducer();
     const sort = createSorter();
@@ -46,7 +60,7 @@ program
       notForwardedOnly,
       pickTextEntities,
       authoredTextEntitiesOnly,
-      countChars,
+      countChars(categories),
       reduce,
       sort,
       (map) => {
