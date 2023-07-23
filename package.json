@@ -10,5 +10,13 @@
     "telegram"
   ],
   "author": "Vladimir Panchenko",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.0.0",
+    "stream-chain": "^2.2.5",
+    "stream-json": "^1.8.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  }
 }
