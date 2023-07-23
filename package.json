@@ -14,7 +14,8 @@
   "dependencies": {
     "commander": "^11.0.0",
     "stream-chain": "^2.2.5",
-    "stream-json": "^1.8.0"
+    "stream-json": "^1.8.0",
+    "unicode-emoji-toolkit": "^1.0.4"
   },
   "devDependencies": {
     "prettier": "^3.0.0"

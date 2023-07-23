@@ -7,6 +7,7 @@ const { parser } = require('stream-json');
 const { pick } = require('stream-json/filters/Pick');
 const { streamArray } = require('stream-json/streamers/StreamArray');
 const fs = require('fs');
+const emj = require('unicode-emoji-toolkit');
 const {
   messagesOnly,
   hasText,
@@ -27,7 +28,9 @@ program
     '-u, --user <user-id>',
     'Telegram User ID (you can use userinfobot to get it)'
   )
-  .action((filename, { user }) => {
+  .option('--skip-emojis', 'Skips emojis when counting frequencies')
+  .action((filename, { user, skipEmojis }) => {
+    user = user?.trim();
     const reduce = createReducer();
     const sort = createSorter();
 
@@ -48,7 +51,9 @@ program
       sort,
       (map) => {
         for (const [key, value] of map) {
-          console.log(`'${key}': ${value}`);
+          if (!skipEmojis || !emj.hasOnlyEmojis(key)) {
+            console.log(`'${key}': ${value}`);
+          }
         }
       },
     ]);
