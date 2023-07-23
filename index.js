@@ -43,7 +43,11 @@ program
       'Other',
     ])
   )
-  .action((filename, { user, skipEmojis, categories }) => {
+  .option(
+    '--include-code-points',
+    'Includes Unicode code points into the output to better distinguish similar characters'
+  )
+  .action((filename, { user, skipEmojis, categories, includeCodePoints }) => {
     user = user?.trim();
     const reduce = createReducer();
     const sort = createSorter();
@@ -66,7 +70,11 @@ program
       (map) => {
         for (const [key, value] of map) {
           if (!skipEmojis || !emj.hasOnlyEmojis(key)) {
-            console.log(`'${key}': ${value}`);
+            console.log(
+              includeCodePoints
+                ? `'${key}' (0x${key.codePointAt(0).toString(16)}): ${value}`
+                : `'${key}': ${value}`
+            );
           }
         }
       },
